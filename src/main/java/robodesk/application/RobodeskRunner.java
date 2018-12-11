@@ -46,22 +46,30 @@ public class RobodeskRunner implements ApplicationRunner {
             pin.setState(PinState.LOW);
         }
 
-        for (byte[] halfstep : HALFSTEP_SEQ){
-            IntStream.range(0,4).forEach(
-                    n -> {
-                        if (halfstep[n] == 0){
-                            CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
-                            CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
-                        } else {
-                            CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
-                            CONTROL_PINS_A[n].setState(PinState.HIGH);
-                            CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
-                            CONTROL_PINS_B[n].setState(PinState.HIGH);
+        IntStream.range(0, 360).forEach(
+                i -> {
+                    for (byte[] halfstep : HALFSTEP_SEQ){
+                        IntStream.range(0,4).forEach(
+                                n -> {
+                                    if (halfstep[n] == 0){
+                                        CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
+                                        CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
+                                    } else {
+                                        CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
+                                        CONTROL_PINS_A[n].setState(PinState.HIGH);
+                                        CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
+                                        CONTROL_PINS_B[n].setState(PinState.HIGH);
+                                    }
+                                }
+                        );
+                        try {
+                            Thread.sleep(3);
+                        } catch (InterruptedException ex){
+                            //discard
                         }
                     }
-            );
-            Thread.sleep(3);
-        }
+                }
+        );
 
         for (GpioPinDigitalOutput pin : CONTROL_PINS_A){
             pin.setMode(PinMode.DIGITAL_OUTPUT);
