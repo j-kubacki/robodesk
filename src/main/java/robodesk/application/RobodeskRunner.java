@@ -27,30 +27,49 @@ public class RobodeskRunner implements ApplicationRunner {
 
         final GpioController GPIO = GpioFactory.getInstance();
         final GpioPinDigitalOutput[] CONTROL_PINS_A = {
-                GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_04, PinState.HIGH),
-                GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_17, PinState.HIGH),
-                GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_27, PinState.HIGH),
-                GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_22, PinState.HIGH)
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_04, PinMode.ANALOG_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_17, PinMode.ANALOG_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_27, PinMode.ANALOG_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_22, PinMode.ANALOG_OUTPUT)
         };
         final GpioPinDigitalOutput[] CONTROL_PINS_B = {
-                GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_12, PinState.HIGH),
-                GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_16, PinState.HIGH),
-                GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_20, PinState.HIGH),
-                GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_21, PinState.HIGH)
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_12, PinMode.ANALOG_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_16, PinMode.ANALOG_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_20, PinMode.ANALOG_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_21, PinMode.ANALOG_OUTPUT)
         };
+
+        for (GpioPinDigitalOutput pin : CONTROL_PINS_A){
+            pin.setState(PinState.LOW);
+        }
+        for (GpioPinDigitalOutput pin : CONTROL_PINS_B){
+            pin.setState(PinState.LOW);
+        }
 
         for (byte[] halfstep : HALFSTEP_SEQ){
             IntStream.range(0,4).forEach(
                     n -> {
                         if (halfstep[n] == 0){
-                            CONTROL_PINS_A[n].low();
-                            CONTROL_PINS_B[n].low();
+                            CONTROL_PINS_A[n].setMode(PinMode.ANALOG_INPUT);
+                            CONTROL_PINS_B[n].setMode(PinMode.ANALOG_INPUT);
                         } else {
-                            CONTROL_PINS_A[n].low();
-                            CONTROL_PINS_B[n].low();
+                            CONTROL_PINS_A[n].setMode(PinMode.ANALOG_OUTPUT);
+                            CONTROL_PINS_A[n].setState(PinState.HIGH);
+                            CONTROL_PINS_B[n].setMode(PinMode.ANALOG_OUTPUT);
+                            CONTROL_PINS_B[n].setState(PinState.HIGH);
                         }
                     }
             );
+            Thread.sleep(3);
+        }
+
+        for (GpioPinDigitalOutput pin : CONTROL_PINS_A){
+            pin.setMode(PinMode.ANALOG_OUTPUT);
+            pin.setState(PinState.HIGH);
+        }
+        for (GpioPinDigitalOutput pin : CONTROL_PINS_B){
+            pin.setMode(PinMode.ANALOG_OUTPUT);
+            pin.setState(PinState.HIGH);
         }
 
         GPIO.shutdown();
