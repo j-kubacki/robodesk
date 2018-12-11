@@ -40,10 +40,12 @@ public class RobodeskRunner implements ApplicationRunner {
         };
 
         for (GpioPinDigitalOutput pin : CONTROL_PINS_A){
-            pin.setState(PinState.LOW);
+            //pin.setState(PinState.LOW);
+            pin.low();
         }
         for (GpioPinDigitalOutput pin : CONTROL_PINS_B){
-            pin.setState(PinState.LOW);
+            //pin.setState(PinState.LOW);
+            pin.low();
         }
 
         IntStream.range(0, 360).forEach(
@@ -53,17 +55,21 @@ public class RobodeskRunner implements ApplicationRunner {
                                 n -> {
                                     if (halfstep[n] == 0){
                                         CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
+                                        CONTROL_PINS_A[n].low();
                                         CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
+                                        CONTROL_PINS_B[n].low();
                                     } else {
                                         CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
-                                        CONTROL_PINS_A[n].setState(PinState.HIGH);
+                                        //CONTROL_PINS_A[n].setState(PinState.HIGH);
+                                        CONTROL_PINS_A[n].high();
                                         CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
-                                        CONTROL_PINS_B[n].setState(PinState.HIGH);
+                                        //CONTROL_PINS_B[n].setState(PinState.HIGH);
+                                        CONTROL_PINS_B[n].high();
                                     }
                                 }
                         );
                         try {
-                            Thread.sleep(3);
+                            Thread.sleep(10);
                         } catch (InterruptedException ex){
                             //discard
                         }
@@ -73,11 +79,13 @@ public class RobodeskRunner implements ApplicationRunner {
 
         for (GpioPinDigitalOutput pin : CONTROL_PINS_A){
             pin.setMode(PinMode.DIGITAL_OUTPUT);
-            pin.setState(PinState.HIGH);
+            //pin.setState(PinState.HIGH);
+            pin.high();
         }
         for (GpioPinDigitalOutput pin : CONTROL_PINS_B){
             pin.setMode(PinMode.DIGITAL_OUTPUT);
-            pin.setState(PinState.HIGH);
+            //pin.setState(PinState.HIGH);
+            pin.high();
         }
 
         GPIO.shutdown();
