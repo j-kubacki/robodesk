@@ -48,17 +48,19 @@ public class RobodeskRunner implements ApplicationRunner {
 
         IntStream.range(0, 360).forEach(
                 i -> {
-                    for (byte[] halfstep : HALFSTEP_SEQ){
+                    for (int k = 0; k < 7; k++){
+                        byte[] halfstepLeftWheel = HALFSTEP_SEQ[k];
+                        byte[] halfstepRightWheel = HALFSTEP_SEQ[7-k];
                         IntStream.range(0,4).forEach(
                                 n -> {
-                                    if (halfstep[n] == 0){
+                                    if (halfstepLeftWheel[n] == 0){
                                         CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
                                     } else {
                                         CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
                                         CONTROL_PINS_A[n].high();
                                     }
 
-                                    if (halfstep[7-n] == 0){
+                                    if (halfstepRightWheel[n] == 0){
                                         CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
                                     } else {
                                         CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
