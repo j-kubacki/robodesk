@@ -23,6 +23,7 @@ bootJar {
 
 repositories {
     mavenCentral()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
 sourceCompatibility = 1.8
@@ -30,5 +31,6 @@ targetCompatibility = 1.8
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
     testCompile("junit:junit")
 }
