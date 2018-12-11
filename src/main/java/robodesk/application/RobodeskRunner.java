@@ -53,10 +53,14 @@ public class RobodeskRunner implements ApplicationRunner {
                                 n -> {
                                     if (halfstep[n] == 0){
                                         CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
-                                        CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
                                     } else {
                                         CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
                                         CONTROL_PINS_A[n].high();
+                                    }
+
+                                    if (halfstep[7-n] == 0){
+                                        CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
+                                    } else {
                                         CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
                                         CONTROL_PINS_B[n].high();
                                     }
