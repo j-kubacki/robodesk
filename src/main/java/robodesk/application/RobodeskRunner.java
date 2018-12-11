@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.IntStream;
 
-@Service
+//@Service
 public class RobodeskRunner implements ApplicationRunner {
 
     private final byte[][] HALFSTEP_SEQ = {
