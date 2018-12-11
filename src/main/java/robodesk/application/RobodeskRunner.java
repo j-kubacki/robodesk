@@ -27,24 +27,22 @@ public class RobodeskRunner implements ApplicationRunner {
 
         final GpioController GPIO = GpioFactory.getInstance();
         final GpioPinDigitalOutput[] CONTROL_PINS_A = {
-                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_04, PinMode.DIGITAL_OUTPUT),
-                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_17, PinMode.DIGITAL_OUTPUT),
-                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_27, PinMode.DIGITAL_OUTPUT),
-                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_22, PinMode.DIGITAL_OUTPUT)
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_07, PinMode.DIGITAL_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_00, PinMode.DIGITAL_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_02, PinMode.DIGITAL_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_03, PinMode.DIGITAL_OUTPUT)
         };
         final GpioPinDigitalOutput[] CONTROL_PINS_B = {
-                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_12, PinMode.DIGITAL_OUTPUT),
-                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_16, PinMode.DIGITAL_OUTPUT),
-                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_20, PinMode.DIGITAL_OUTPUT),
-                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_21, PinMode.DIGITAL_OUTPUT)
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_26, PinMode.DIGITAL_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_27, PinMode.DIGITAL_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_28, PinMode.DIGITAL_OUTPUT),
+                GPIO.provisionDigitalMultipurposePin(RaspiPin.GPIO_29, PinMode.DIGITAL_OUTPUT)
         };
 
         for (GpioPinDigitalOutput pin : CONTROL_PINS_A){
-            //pin.setState(PinState.LOW);
             pin.low();
         }
         for (GpioPinDigitalOutput pin : CONTROL_PINS_B){
-            //pin.setState(PinState.LOW);
             pin.low();
         }
 
@@ -55,15 +53,11 @@ public class RobodeskRunner implements ApplicationRunner {
                                 n -> {
                                     if (halfstep[n] == 0){
                                         CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
-                                        CONTROL_PINS_A[n].low();
                                         CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
-                                        CONTROL_PINS_B[n].low();
                                     } else {
                                         CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
-                                        //CONTROL_PINS_A[n].setState(PinState.HIGH);
                                         CONTROL_PINS_A[n].high();
                                         CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
-                                        //CONTROL_PINS_B[n].setState(PinState.HIGH);
                                         CONTROL_PINS_B[n].high();
                                     }
                                 }
@@ -79,12 +73,10 @@ public class RobodeskRunner implements ApplicationRunner {
 
         for (GpioPinDigitalOutput pin : CONTROL_PINS_A){
             pin.setMode(PinMode.DIGITAL_OUTPUT);
-            //pin.setState(PinState.HIGH);
             pin.high();
         }
         for (GpioPinDigitalOutput pin : CONTROL_PINS_B){
             pin.setMode(PinMode.DIGITAL_OUTPUT);
-            //pin.setState(PinState.HIGH);
             pin.high();
         }
 
