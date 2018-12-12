@@ -101,6 +101,10 @@ public class RobodeskRunner{
     }
 
     public void teardown(){
+        working = false;
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex){}
         for (GpioPinDigitalOutput pin : CONTROL_PINS_A){
             pin.setMode(PinMode.DIGITAL_OUTPUT);
             pin.high();
@@ -125,7 +129,7 @@ public class RobodeskRunner{
                 public void run() {
                     do {
                         boolean onward = LEFT_WHEEL == Direction.FORWARD;
-                        for (int k = 0; k < 7; k++) {
+                        for (int k = 0; k < 7;) {
                             byte[] halfstepLeftWheel = LEFTWHEEL_HALFSTEP_SEQ[k];
                             IntStream.range(0, 4).forEach(
                                     n -> {
