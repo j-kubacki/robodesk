@@ -3,10 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <button type="button" formaction="/goleft">LEFT</button>
-    <button type="button" formaction="/goforward">FORWARD</button>
-    <button type="button" formaction="/goright">RIGHT</button>
-    <button type="button" formaction="/stop">STOP</button>
+    <table>
+        <tr>
+            <th></th>
+            <th>
+                <button type="button" onClick="location.href='goforward'">↑</button>
+            </th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>
+                <button type="button" onClick="location.href='goleft'">←</button>
+            </th>
+            <th>
+                <button type="button" onClick="location.href='stop'">◯</button>
+            </th>
+            <th>
+                <button type="button" onClick="location.href='goright'">→</button>
+            </th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>
+                <button type="button" onClick="location.href='stop'">↓</button>
+            </th>
+            <th></th>
+        </tr>
+    </table>
 </head>
 <body>
 
