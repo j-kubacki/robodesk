@@ -120,6 +120,7 @@ public class RobodeskRunner{
     }
 
     private boolean working = false;
+    private final Object monitor = new Object();
 
     private void start(){
         if (!working){
@@ -131,16 +132,18 @@ public class RobodeskRunner{
                         boolean onward = LEFT_WHEEL == Direction.FORWARD;
                         for (int k = 0; k < 7;) {
                             byte[] halfstepLeftWheel = LEFTWHEEL_HALFSTEP_SEQ[k];
-                            IntStream.range(0, 4).forEach(
-                                    n -> {
-                                        if (halfstepLeftWheel[n] == 0) {
-                                            CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
-                                        } else {
-                                            CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
-                                            CONTROL_PINS_A[n].high();
+                            synchronized (monitor) {
+                                IntStream.range(0, 4).forEach(
+                                        n -> {
+                                            if (halfstepLeftWheel[n] == 0) {
+                                                CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
+                                            } else {
+                                                CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
+                                                CONTROL_PINS_A[n].high();
+                                            }
                                         }
-                                    }
-                            );
+                                );
+                            }
                             if (onward){
                                 k++;
                             }
@@ -160,16 +163,18 @@ public class RobodeskRunner{
                         boolean onward = RIGHT_WHEEL == Direction.FORWARD;
                         for (int k = 0; k < 7; ) {
                             byte[] halfstepRightWheel = RIGHTWHEEL_HALFSTEP_SEQ[k];
-                            IntStream.range(0, 4).forEach(
-                                    n -> {
-                                        if (halfstepRightWheel[n] == 0) {
-                                            CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
-                                        } else {
-                                            CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
-                                            CONTROL_PINS_B[n].high();
+                            synchronized (monitor) {
+                                IntStream.range(0, 4).forEach(
+                                        n -> {
+                                            if (halfstepRightWheel[n] == 0) {
+                                                CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
+                                            } else {
+                                                CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
+                                                CONTROL_PINS_B[n].high();
+                                            }
                                         }
-                                    }
-                            );
+                                );
+                            }
                             if (onward){
                                 k++;
                             }
