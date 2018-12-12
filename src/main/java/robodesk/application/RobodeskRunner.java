@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 @Component
 @Scope("singleton")
-public class RobodeskRunner implements Runnable{
+public class RobodeskRunner{
 
     private final byte[][] LEFTWHEEL_HALFSTEP_SEQ = {
             {0,1,1,1},
@@ -120,57 +120,69 @@ public class RobodeskRunner implements Runnable{
     private void start(){
         if (!working){
             working = true;
-            new Thread(this).start();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    do {
+                        boolean onward = LEFT_WHEEL == Direction.FORWARD;
+                        for (int k = 0; k < 7; k++) {
+                            byte[] halfstepLeftWheel = LEFTWHEEL_HALFSTEP_SEQ[k];
+                            IntStream.range(0, 4).forEach(
+                                    n -> {
+                                        if (halfstepLeftWheel[n] == 0) {
+                                            CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
+                                        } else {
+                                            CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
+                                            CONTROL_PINS_A[n].high();
+                                        }
+                                    }
+                            );
+                            if (onward){
+                                k++;
+                            }
+                            try {
+                                Thread.sleep(10);
+                            } catch (InterruptedException ex) {
+                                //discard
+                            }
+                        }
+                    } while (working);
+                }
+            }).start();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    do {
+                        boolean onward = RIGHT_WHEEL == Direction.FORWARD;
+                        for (int k = 0; k < 7; ) {
+                            byte[] halfstepRightWheel = RIGHTWHEEL_HALFSTEP_SEQ[k];
+                            IntStream.range(0, 4).forEach(
+                                    n -> {
+                                        if (halfstepRightWheel[n] == 0) {
+                                            CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
+                                        } else {
+                                            CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
+                                            CONTROL_PINS_B[n].high();
+                                        }
+                                    }
+                            );
+                            if (onward){
+                                k++;
+                            }
+
+                            try {
+                                Thread.sleep(10);
+                            } catch (InterruptedException ex) {
+                                //discard
+                            }
+                        }
+                    } while (working);
+                }
+            }).start();
         }
     }
 
     public void run(){
-        do {
-                for (int k = 0, i = 0; k < 7 || i < 7; k++, i++) {
-                    byte[] halfstepLeftWheel = LEFTWHEEL_HALFSTEP_SEQ[k];
-                    byte[] halfstepRightWheel = RIGHTWHEEL_HALFSTEP_SEQ[i];
-                    IntStream.range(0, 4).forEach(
-                            n -> {
-                                if (halfstepLeftWheel[n] == 0) {
-                                    CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_INPUT);
-                                } else {
-                                    CONTROL_PINS_A[n].setMode(PinMode.DIGITAL_OUTPUT);
-                                    CONTROL_PINS_A[n].high();
-                                }
 
-                                if (halfstepRightWheel[n] == 0) {
-                                    CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_INPUT);
-                                } else {
-                                    CONTROL_PINS_B[n].setMode(PinMode.DIGITAL_OUTPUT);
-                                    CONTROL_PINS_B[n].high();
-                                }
-                            }
-                    );
-                    switch (LEFT_WHEEL){
-                        case FORWARD:
-                            k++;
-                            break;
-                        case BACKWARD:
-                            break;
-                        case STOP:
-                            break;
-                    }
-                    switch (RIGHT_WHEEL){
-                        case FORWARD:
-                            i++;
-                            break;
-                        case BACKWARD:
-                            break;
-                        case STOP:
-                            break;
-                    }
-
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException ex) {
-                        //discard
-                    }
-                }
-        } while (working);
     }
 }
