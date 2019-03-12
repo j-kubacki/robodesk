@@ -11,10 +11,11 @@ class Runner implements CommandLineRunner {
 
     @Override
     public void run(String...args) throws Exception {
-        System.out.println("dupa");
+        System.out.println("START !");
+        RobodeskEasyDriverController cont = new RobodeskEasyDriverController(RaspiPin.GPIO_24,RaspiPin.GPIO_23,null,null,null,null,null);
 
-        RobodeskEasyDriverController cont = new RobodeskEasyDriverController(RaspiPin.GPIO_23);
         cont.move(1,2,3);
         cont.shutdown();
+        System.out.println("END !");
     }
 }
